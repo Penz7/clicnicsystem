@@ -1,0 +1,49 @@
+<nav class="navbar navbar-expand-sm">
+    <div class="container">
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <a class="navbar-brand" href="/">
+           <img class="logo" src="https://res.cloudinary.com/djmsbhhnn/image/upload/v1670132356/CNPM/logo_yhcb9b.svg" alt="">
+         </a>
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#headpage">Trang chủ</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#banner">Đối tác</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#feature">Chất lượng</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#order">Liên hệ</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#feedback">Phản hồi</a>
+                </li>
+           {% if current_user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link text-success" href="/">
+                        <img src="{{ current_user.avatar }}" width="40" class="rounded-circle" name="{{ current_user.name }}" />
+                        Chào {{ current_user.name }}
+                    </a>
+                </li>
+                  <li class="nav-item">
+                    <a class="nav-link text-danger" href="/logout">Đăng xuất</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link text-success" href="/login">Đăng nhập</a>
+                </li>
+                  <li class="nav-item">
+                    <a class="nav-link text-danger" href="/register">Đăng ký</a>
+                </li>
+                {% endif %}
+            </ul>
+            <button class="btn btn-custom d-flex justify-content-center align-items-center" type="submit">
+                <img src="https://res.cloudinary.com/djmsbhhnn/image/upload/v1670132794/CNPM/pasient_hvchhe.svg" width="24" height="24" alt=Đăng ký khám>
+                <a class="nav-link font-weight-bold" style="color:#fff" href="/register_patient" id="registed">Đăng ký</a>
+            </button>
+
+        </div>
+    </div>
+</nav>

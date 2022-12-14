@@ -1,0 +1,16 @@
+{% extends 'admin/master.html' %}
+
+{% block body %}
+
+{% if current_user.is_authenticated %}
+
+<h1 class="text-center text-success">CHÀO MỪNG ĐẾN TRANG QUẢN TRỊ BỆNH VIỆN</h1>
+<h3>Chào <span class="text-danger">{{ current_user.last_name }}{{ current_user.first_name }}</span>!</h3>
+
+
+{% else %}
+    {% include 'login.html' %}
+{% endif %}
+
+
+{% endblock %}

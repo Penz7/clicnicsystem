@@ -1,0 +1,187 @@
+{% extends 'admin/master.html' %}
+{% block body %}
+{% if current_user.is_authenticated %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+      integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+      crossorigin="anonymous" referrerpolicy="no-referrer"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"
+        integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="{{url_for('static', filename='js/pay_medical_examination.js')}}"></script>
+<div class="content">
+    <div class="page-inner">
+        <h4 class="page-title">Thanh toán hóa đơn</h4>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Hoá đơn</div>
+                        <div class="card-category">Nhập thông tin mã phiếu khám bệnh</div>
+                    </div>
+                    <form>
+                        <div class="form-group row">
+                            <label for="medical_examination_id"
+                                   class="col-lg-3 col-md-3 col-sm-12 mt-sm-2 text-center pt-2">
+                                Mã phiếu khám bệnh
+                            </label>
+                            <div class="col-lg-6 col-md-6 col-sm-12 pt-2 pb-2">
+                                <input type="number" class="form-control" name="medical_examination_id"
+                                       placeholder="Nhập mã phiếu khám bệnh cần thanh toán..."
+                                       id="medical_examination_id"
+                                       required>
+                            </div>
+                            <div class="col-lg-2 col-md-3 col-sm-12 text-center pt-2 pb-2">
+                                <a href="javascript:;" class="btn btn-info btn-border btn-round btn-sm mr-2 text-center"
+                                   onclick=loadPatient()>
+                        <span class="btn-label">
+                            <i class="fa fa-pencil" aria-hidden="true"></i>
+                        </span>
+                                    Tìm kiếm
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="row" id="bill_detail">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Thông tin hoá đơn</div>
+                        <div class="card-category">Thông tin chi tiết hoá đơn từ bác sỹ</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group-default">
+                                    <div class="pt-2 pb-2">
+                                        <span class="text-success fw-bold">Bệnh nhân:</span>
+                                        <span id="patient_fullname_pay"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group-default">
+                                    <div class="pt-2 pb-2">
+                                        <span class="text-success fw-bold">CCCD:</span>
+                                        <span id="patient_card_id_pay"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group-default">
+                                    <div class="pt-2 pb-2">
+                                        <span class="text-success fw-bold">Mã phiếu khám bệnh:</span>
+                                        <span id="medical_examination_id_pay"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group-default">
+                                    <div class="pt-2 pb-2">
+                                        <span class="text-success fw-bold">Ngày tạo phiếu khám:</span>
+                                        <span id="medical_examination_date_created"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group-default">
+                                    <div class="pt-2 pb-2">
+                                        <span class="text-success fw-bold">Chuẩn đoán bệnh:</span>
+                                        <span id="predicted_disease_patient"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Danh sách thuốc</div>
+                        <div class="card-category">Thông tin thuốc được liệt kê từ bác sỹ</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered table-hover model-list">
+                                <thead class="bg-thead">
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Tên thuốc</th>
+                                    <th>Đơn vị</th>
+                                    <th>Số lượng</th>
+                                    <th>Đơn giá</th>
+                                    <th>Tổng tiền</th>
+                                </tr>
+                                </thead>
+                                <tbody id="medicine_list_datas">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Thanh toán hoá đơn</div>
+                        <div class="card-category">Thông tin nhân viên thu ngân</div>
+                        <span>Nhân viên: <span>{{ current_user.last_name }} {{ current_user.first_name }}</span> Mã nhân viên : <span id="account_id_current">{{ current_user.id }}</span></span>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group-default">
+                                    <div class="pt-2 pb-2">
+                                        <span class="text-success fw-bold">Tổng tiền thuốc:</span>
+                                        <span id="medicine_price_total_pay"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group-default">
+                                    <div class="pt-2 pb-2">
+                                        <span class="text-success fw-bold">Tiền khám bệnh:</span>
+
+                                            {% for rule in rule %}
+                                                {% if rule.name == 'Tiền khám' %}
+                                         <input value="{{ rule.amount }}" id="medical_examination_price_pay">
+                                                {% else %}
+                                                {% endif %}
+                                            {% endfor %}
+                                        </input>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group-default">
+                                    <div class="pt-2 pb-2">
+                                        <span class="text-success fw-bold">Tổng tiền cần thanh toán:</span>
+                                        <span id="total_price_pay"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-action">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <a href="javascript:;" class="btn btn-success" id="confirm" onclick="saveMedicineExaminationBill()">Thanh toán</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endif %}
+{% endblock %}

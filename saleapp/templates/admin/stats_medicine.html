@@ -1,0 +1,54 @@
+{% extends 'admin/master.html' %}
+
+{% block body %}
+<h3 class="text-center mt-3 mb-3">Thống kê tần suất sử dụng thuốc theo tháng</h3>
+<div class="row">
+    <div class="col-md-5 col-sm-12">
+        <table class="table">
+            <tr>
+                <th>Tháng</th>
+                <th>Số thuốc</th>
+            </tr>
+            {% for stats_medicine in stats_medicine %}
+            <tr>
+
+                <td>{{ stats_medicine[0] }}</td>
+                <td>{{ stats_medicine[1] }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="col-md-7 col-sm-12">
+        <form>
+            <div class="form-group">
+                <input type="text" placeholder="Nhập từ khóa" name="kw" class="form-control"/>
+            </div>
+            <div class="form-group">
+                <label>Từ ngày</label>
+                <input type="date" name="from_month" class="form-control"/>
+            </div>
+            <div class="form-group">
+                <label>Đến ngày</label>
+                <input type="date" name="to_month" class="form-control"/>
+            </div>
+            <div>
+                <input type="submit" value="Lọc dữ liệu" class="btn btn-info"/>
+            </div>
+        </form>
+        <canvas id="revenueStats3"></canvas>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ url_for('static', filename='js/my-chart.js') }}"></script>
+<script>
+let data2 = [], labels2=[];
+  {% for stats_medicine in stats_medicine %}
+    data2.push({{ stats_medicine[1] }})
+    labels2.push('{{ stats_medicine[0] }}')
+  {% endfor %}
+  window.onload = function() {
+    drawRevenueStats3(labels2, data2)
+  }
+
+</script>
+{% endblock %}
