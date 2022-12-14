@@ -1,5 +1,5 @@
 from saleapp import db, app, dao
-from saleapp.models import MedicineModel, MedicalBillModel, MedicalExaminationModel,UserRole, RuleModel
+from saleapp.models import MedicineModel, MedicalBillModel, MedicalExaminationModel,UserRole, RuleModel, AccountModel
 from flask_admin import Admin, BaseView, expose, AdminIndexView
 from flask_admin.contrib.sqla import ModelView
 from flask import render_template
@@ -280,6 +280,7 @@ class AdminView(AdminIndexView):
 
 
 admin = Admin(app=app, name='Quản trị viên', template_mode='bootstrap4', index_view=AdminView())
+admin.add_view(AuthenticatedModelView(AccountModel, db.session, name='Quản lý tài khoản'))
 admin.add_view(MedicineView(MedicineModel, db.session, name='Kho thuốc'))
 admin.add_view(AuthenticatedModelView(MedicalExaminationModel, db.session, name='Phiếu khám'))
 admin.add_view(AuthenticatedModelView(MedicalBillModel, db.session, name='Hóa đơn'))
